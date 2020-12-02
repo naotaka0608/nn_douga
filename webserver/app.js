@@ -34,6 +34,7 @@ User.sync().then(() => {
 var indexRouter = require('./routes/index');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
+var signup = require('./routes/signup');
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -143,6 +144,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/login', login);
 app.use('/logout', logout);
+app.use('/signup', signup);
 app.use('/users', usersRouter);
 
 app.post(
