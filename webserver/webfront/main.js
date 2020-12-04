@@ -7,6 +7,8 @@ import ReactDOM from 'react-dom';
 import Uploader from './uploader.js';
 import MyVideoTable from './myVideoTable.js';
 import VideoPlayer from './videoPlayer.js';
+import CommentPoster from './commentPoster.js';
+import CommentTable from './commentTable.js';
 
 const uploaderDivided = document.getElementById('dropbox-container');
 if (uploaderDivided) {
@@ -39,5 +41,39 @@ if (videoContainerDivided) {
       apiToken={videoContainerDivided.dataset.apiToken}
     />,
     videoContainerDivided
+  );
+}
+
+/**
+* コメントの追加が行われた際に通知するリスナーのリスト
+* リスナー関数の第一引数は、 comments[], 第二引数はイベント名とする
+*/
+const commentListenerContainer = {
+    listeners: []
+};
+
+const commentPosterDivided = document.getElementById('comment-poster');
+if (commentPosterDivided) {
+  ReactDOM.render(
+    <CommentPoster
+      videoId={commentPosterDivided.dataset.videoId}
+      videoPlayerId={commentPosterDivided.dataset.videoPlayerId}
+      apiToken={commentPosterDivided.dataset.apiToken}
+      commentListenerContainer={commentListenerContainer}
+    />,
+    commentPosterDivided
+  );
+}
+
+const commentTableDivided = document.getElementById('comment-table');
+if (commentTableDivided) {
+  ReactDOM.render(
+    <CommentTable
+      videoId={commentTableDivided.dataset.videoId}
+      videoPlayerId={commentTableDivided.dataset.videoPlayerId}
+      apiToken={commentTableDivided.dataset.apiToken}
+      commentListenerContainer={commentListenerContainer}
+    />,
+    commentTableDivided
   );
 }

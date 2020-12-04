@@ -14,10 +14,6 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies += jdbc
-//libraryDependencies += "org.scalikejdbc" %% "scalikejdbc"  % "3.5.0"
-//libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-config" % "3.5.0"
-//libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-play-dbapi-adapter" % "2.6.0-scalikejdbc-3.2"
-
 libraryDependencies ++= Seq(
   "com.h2database"  %  "h2"                           % "1.4.200", // your jdbc driver here
   "org.scalikejdbc" %% "scalikejdbc"                  % "3.5.0",
