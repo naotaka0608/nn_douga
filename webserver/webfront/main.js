@@ -13,6 +13,7 @@ import CommentRenderer from './commentRenderer.js';
 import MylistButton from './mylistButton.js';
 import MylistTable from './mylistTable.js';
 import VideoStatisticsArea from './videoStatisticsArea.js';
+import RecentVideoArea from './recentVideoArea.js';
 
 const uploaderDivided = document.getElementById('dropbox-container');
 if (uploaderDivided) {
@@ -121,3 +122,16 @@ const videoStatContainerDivided = document.getElementById(
         videoStatContainerDivided
       );
     }
+
+const recentVideoAreaDivided = document.getElementById(
+    'recent-video-container'
+  );
+  if (recentVideoAreaDivided) {
+    ReactDOM.render(
+      <RecentVideoArea
+        apiToken={recentVideoAreaDivided.dataset.apiToken}
+        mediaserverUrlRoot={recentVideoAreaDivided.dataset.mediaserverUrlRoot}
+      />,
+      recentVideoAreaDivided
+    );
+  }
