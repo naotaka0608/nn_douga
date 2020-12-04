@@ -35,6 +35,11 @@ var indexRouter = require('./routes/index');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
 var signup = require('./routes/signup');
+var upload = require('./routes/upload');
+var watch = require('./routes/watch');
+var settings = require('./routes/settings');
+var myVideos = require('./routes/my/videos');
+var apiV1MyVideos = require('./routes/api/v1/my/videos');
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -145,6 +150,11 @@ app.use('/', indexRouter);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/signup', signup);
+app.use('/upload', upload);
+app.use('/watch', watch);
+app.use('/settings', settings);
+app.use('/my/videos', myVideos);
+app.use('/v1/my', apiV1MyVideos);
 app.use('/users', usersRouter);
 
 app.post(
