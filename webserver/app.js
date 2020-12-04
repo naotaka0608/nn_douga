@@ -39,8 +39,13 @@ var upload = require('./routes/upload');
 var watch = require('./routes/watch');
 var settings = require('./routes/settings');
 var myVideos = require('./routes/my/videos');
+var myMylist = require('./routes/my/mylist');
+
 var apiV1MyVideos = require('./routes/api/v1/my/videos');
+var apiV1MyMylist = require('./routes/api/v1/my/mylist');
 var apiV1VideosComments = require('./routes/api/v1/videos/comments');
+var apiV1VideosStatistics = require('./routes/api/v1/videos/videostatistics');
+
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -155,8 +160,13 @@ app.use('/upload', upload);
 app.use('/watch', watch);
 app.use('/settings', settings);
 app.use('/my/videos', myVideos);
+app.use('/my/mylist', myMylist);
+
 app.use('/v1/my', apiV1MyVideos);
+app.use('/v1/my/mylist', apiV1MyMylist);
 app.use('/v1/videos', apiV1VideosComments);
+app.use('/v1/videos', apiV1VideosStatistics);
+
 app.use('/users', usersRouter);
 
 app.post(
