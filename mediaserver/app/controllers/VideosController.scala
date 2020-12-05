@@ -1,9 +1,14 @@
 package controllers
 
+import java.nio.file.{FileSystems, Files, StandardCopyOption}
+import java.util.UUID
 import javax.inject._
+
 import play.api.Configuration
 import play.api.mvc._
 import play.api.libs.json.Json
+import play.Logger
+
 
 import pdi.jwt.{Jwt, JwtAlgorithm}
 
@@ -29,7 +34,17 @@ class VideosController @Inject()(cc: ControllerComponents,
                 val json = Json.parse(jsonString)
                 val userId = (json \ "userId").validate[Long].get
                 val expire = (json \ "expire").validate[Long].get
-                Future.successful(Ok(s"userId:${userId}, expire:${expire}"))
+
+                if (System.currentTimeMillis() / 1000 <= expire) {
+                  val videoId = UUID.randomUUID().toString
+                  val originalFilepath = FileSystems.getDefault.getPath(originalStoreDirPath, videoId)
+                  Files.copy(file.ref.path, originalFilepath, StandardCopyOption.COPY_ATTRIBUTES)
+                  Logger.debug(s"File posted : ${originalFilepath}")
+                  Future.successful(Ok("File stored."))
+                } else {
+                  Future.successful(BadRequest("Api token expired."))
+                }
+              case _ => Future.successful(BadRequest("Need file and api token data."))
             }
         }
       case _ => Future.successful(BadRequest("Need form data."))
