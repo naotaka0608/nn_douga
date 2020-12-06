@@ -1,0 +1,16 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    div
+      if user
+        h3= user.email
+        a(href='/logout') ログアウト
+      else
+        div
+          a(href='/login') ログイン
+        div
+          a(href='/signup') サインアップ
+    block content
