@@ -2,15 +2,21 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet", href="/stylesheets/style.css")
   body
     div
       if user
         h3= user.email
-        a(href='/logout') ログアウト
+        div
+          a(href="/my/videos") 自分の動画
+        div
+          a(href="/upload") 動画投稿
+        div
+          a(href="/logout") ログアウト
       else
         div
-          a(href='/login') ログイン
+          a(href="/login") ログイン
         div
-          a(href='/signup') サインアップ
+          a(href="/signup") サインアップ
     block content
+    script(src="/javascripts/bundle.js")
