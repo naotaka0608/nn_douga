@@ -5,8 +5,10 @@ import java.time.{Clock, LocalDateTime}
 import java.util.UUID
 import javax.inject._
 
+import akka.actor.ActorRef
 import domain.entity.{Video, VideoStatus}
 import domain.repository.VideoRepository
+import infrastructure.actor.EncodeStartMessage
 import play.api.Configuration
 import play.api.mvc._
 import play.api.libs.json.Json
@@ -20,6 +22,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 @Singleton
 class VideosController @Inject()(cc: ControllerComponents,
                                  videoRepository: VideoRepository,
+                                 @Named("video-encoder") videoEncoder: ActorRef,
                                  clock: Clock,
                                  configuration: Configuration) extends AbstractController(cc) {
 
@@ -55,7 +58,11 @@ class VideosController @Inject()(cc: ControllerComponents,
                     now
                   )
                   val future = videoRepository.create(video)
-                  future.map(_ => Ok("Video stored."))
+                  future.foreach { case _ => {
+                    videoEncoder ! EncodeStartMessage(video)
+                  }}
+                  Future.successful(Ok(Json.toJson(Seq(video)))
+                    .as("application/json"))
                 } else {
                   Future.successful(BadRequest("Api token expired."))
                 }
