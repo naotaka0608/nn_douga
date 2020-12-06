@@ -20,16 +20,15 @@ var Mylistitem = require('./models/mylistitem');
 var VideoStatistic = require('./models/videostatistic');
 User.sync().then(() => {
   Video.belongsTo(User, { foreignKey: 'userId' });
-    Video.sync().then(() => {    
-      Comment.belongsTo(Video, { foreignKey: 'videoId' });
-      Comment.sync();
-      Video.belongsTo(VideoStatistic, { foreignKey: 'videoId' });
-      VideoStatistic.sync();
-    });
-    Mylistitem.belongsTo(User, { foreignKey: 'userId' });
-    Mylistitem.sync();
-  }
-);
+  Video.sync().then(() => {
+    Comment.belongsTo(Video, { foreignKey: 'videoId' });
+    Comment.sync();
+    Video.belongsTo(VideoStatistic, { foreignKey: 'videoId' });
+    VideoStatistic.sync();
+  });
+  Mylistitem.belongsTo(User, { foreignKey: 'userId' });
+  Mylistitem.sync();
+});
 
 var indexRouter = require('./routes/index');
 var login = require('./routes/login');
@@ -47,10 +46,7 @@ var apiV1MyMylist = require('./routes/api/v1/my/mylist');
 var apiV1VideosComments = require('./routes/api/v1/videos/comments');
 var apiV1VideosStatistics = require('./routes/api/v1/videos/videostatistics');
 
-var usersRouter = require('./routes/users');
-
 var app = express();
-
 app.use(helmet());
 
 // パスポートの設定
@@ -61,67 +57,47 @@ passport.use(
       passwordField: 'password'
     },
     function(email, password, done) {
-      // if (email === 'soichiro_yoshimura@nnn.ed.jp' && password == 'test') {
-      //   done(null, { email, password });
-      // } else {
-      //   done(null, false, { message: 'パスワードが違います' });
-      // }
-      // passwordDigestClient
-      //   .verify(
-      //     password,
-      //     '$2a$15$zpLyTVbAIYURo5v/W2IWy.nasRQ/IDQCLKH/iDHHe8N5xUynbT33O'
-      //   )
-      //   .then(isCorrect => {
-      //     if (email === 'soichiro_yoshimura@nnn.ed.jp' && isCorrect) {
-      //       done(null, { email, password });
-      //     } else {
-      //       done(null, false, { message: 'パスワードが違います' });
-      //     }
-      //   });
       User.findOne({
-          where: {
-            email: email
-          }
-        }).then(user => {
-          if (!user) {
-            done(null, false, {
-              message: '登録されたメールアドレスではありません'
+        where: {
+          email: email
+        }
+      }).then(user => {
+        if (!user) {
+          done(null, false, {
+            message: '登録されたメールアドレスではありません'
+          });
+        } else {
+          passwordDigestClient
+            .verify(
+              password,
+              user.passwordDigest
+            )
+            .then(isCorrect => {
+              if (isCorrect) {
+                done(null, { email, password });
+              } else {
+                done(null, false, { message: 'パスワードが違います' });
+              }
             });
-          } else {
-            passwordDigestClient
-              .verify(
-                password,
-                user.passwordDigest
-                //'$2a$15$zpLyTVbAIYURo5v/W2IWy.nasRQ/IDQCLKH/iDHHe8N5xUynbT33O'
-              )
-              .then(isCorrect => {
-                //if (email === 'soichiro_yoshimura@nnn.ed.jp' && isCorrect) {
-                if (isCorrect) {
-                  done(null, { email, password });
-                } else {
-                  done(null, false, { message: 'パスワードが違います' });
-                }
-              });
-          }
-        });
+        }
+      });
     }
   )
 );
 
 passport.serializeUser(function(user, done) {
-  // done(null, user);
   User.findOne({
-    where: {
-      email: user.email
-    }
-  }).then(storedUser => {
-    user.userId = storedUser.userId;
-    user.userName = storedUser.userName;
-    user.isEmailVerified = storedUser.isEmailVerified;
-    user.isAdmin = storedUser.isAdmin;
-    delete user.password; // パスワードプロパティはハッシュにして保存しているので削除する
-    done(null, user);
-  });
+      where: {
+        email: user.email
+      }
+    }).then(storedUser => {
+      user.userId = storedUser.userId;
+      user.userName = storedUser.userName;
+      user.isEmailVerified = storedUser.isEmailVerified;
+      user.isAdmin = storedUser.isAdmin;
+      delete user.password; // パスワードプロパティはハッシュにして保存しているので削除する
+      done(null, user);
+    });
 });
 
 passport.deserializeUser(function(user, done) {
@@ -131,9 +107,9 @@ passport.deserializeUser(function(user, done) {
 app.use(
   session({
     store: new RedisStore({
-      host: config.REDIS_HOST,
-      port: config.REDIS_PORT
-    }),
+        host: config.REDIS_HOST,
+        port: config.REDIS_PORT
+      }),
     secret: config.SECRET,
     resave: false,
     saveUninitialized: false
@@ -141,7 +117,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -169,8 +144,6 @@ app.use('/v1/my/mylist', apiV1MyMylist);
 app.use('/v1/videos', apiV1VideosComments);
 app.use('/v1/videos', apiV1VideosStatistics);
 
-app.use('/users', usersRouter);
-
 app.post(
   '/login',
   passport.authenticate('local', {
@@ -179,7 +152,6 @@ app.post(
     failureFlash: false
   })
 );
-  
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

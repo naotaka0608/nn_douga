@@ -38,12 +38,12 @@ export default class CommentPoster extends React.Component {
       })
         .then(res => res.json())
         .then(json => {
-            input.value = '';
-            console.log(json);
-            commentListenerContainer.listeners.forEach(listener => {
-                json.comment.isSelfPosted = true;
-                listener([json.comment], 'commentpost');
-            });
+          input.value = '';
+          console.log(json);
+          commentListenerContainer.listeners.forEach(listener => {
+            json.comment.isSelfPosted = true;
+            listener([json.comment], 'commentpost');
+          });
         })
         .catch(e => {
           console.error(e);

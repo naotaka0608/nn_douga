@@ -39,27 +39,26 @@ router.get('/', authenticationEnsurer, csrfProtection, (req, res, next) => {
 });
 
 router.post('/', authenticationEnsurer, csrfProtection, (req, res, next) => {
-      const userName = req.body.userName;
-    
-      User.findOne({
-        where: {
-          userId: req.user.userId
-        }
-      }).then(user => {
-        User.update(
-          {
-            userName: userName.substring(0, 255)
-          },
-          {
-            where: {
-              userId: req.user.userId
-            }
-          }
-        ).then(() => {
-          res.redirect('/settings');
-        });
-      });
-    });
+    const userName = req.body.userName;
 
+    User.findOne({
+    where: {
+        userId: req.user.userId
+    }
+    }).then(user => {
+    User.update(
+        {
+        userName: userName.substring(0, 255)
+        },
+        {
+        where: {
+            userId: req.user.userId
+        }
+        }
+    ).then(() => {
+        res.redirect('/settings');
+    });
+    });
+});
 
 module.exports = router;

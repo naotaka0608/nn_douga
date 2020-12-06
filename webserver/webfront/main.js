@@ -34,7 +34,6 @@ if (myVideoTableDivided) {
   );
 }
 
-
 const videoContainerDivided = document.getElementById('video-containar');
 if (videoContainerDivided) {
   ReactDOM.render(
@@ -111,27 +110,27 @@ if (mylistTableDevided) {
 }
 
 const videoStatContainerDivided = document.getElementById(
-      'video-stat-container'
+    'video-stat-container'
+);
+if (videoStatContainerDivided) {
+    ReactDOM.render(
+    <VideoStatisticsArea
+        videoId={mylistButtonDivided.dataset.videoId}
+        apiToken={videoStatContainerDivided.dataset.apiToken}
+    />,
+    videoStatContainerDivided
     );
-    if (videoStatContainerDivided) {
-      ReactDOM.render(
-        <VideoStatisticsArea
-          videoId={mylistButtonDivided.dataset.videoId}
-          apiToken={videoStatContainerDivided.dataset.apiToken}
-        />,
-        videoStatContainerDivided
-      );
-    }
+}
 
 const recentVideoAreaDivided = document.getElementById(
     'recent-video-container'
-  );
-  if (recentVideoAreaDivided) {
+);
+if (recentVideoAreaDivided) {
     ReactDOM.render(
-      <RecentVideoArea
+    <RecentVideoArea
         apiToken={recentVideoAreaDivided.dataset.apiToken}
         mediaserverUrlRoot={recentVideoAreaDivided.dataset.mediaserverUrlRoot}
-      />,
-      recentVideoAreaDivided
+    />,
+    recentVideoAreaDivided
     );
-  }
+}

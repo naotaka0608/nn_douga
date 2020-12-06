@@ -49,8 +49,8 @@ export default class MyVideoTable extends React.Component {
       ) {
         operationLink = (
             <a
-                className="btn btn-primary btn-sm"
-                href={'/my/videos/' + myVideo.videoId}
+            className="btn btn-primary btn-sm"
+            href={'/my/videos/' + myVideo.videoId}
             >
             編集及び公開
             </a>
@@ -72,7 +72,7 @@ export default class MyVideoTable extends React.Component {
     });
 
     return (
-      <table className="table">
+        <table className="table">
         <tbody>
           <tr>
             <th>ID</th>

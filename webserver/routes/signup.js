@@ -67,34 +67,35 @@ router.post('/', (req, res, next) => {
 router.get('/emailverify', (req, res, next) => {
     const token = req.query.token;
     if (token) {
-        let decoded = null;
-        try {
-          decoded = jwt.verify(token, config.SECRET);
-        } catch (err) {
-          res.render('signup/emailverify.pug', { user: req.user });
-          return;
-        }
-    
-        const email = decoded.email;
-        User.update({
-            isEmailVerified: true
+    let decoded = null;
+    try {
+        decoded = jwt.verify(token, config.SECRET);
+    } catch (err) {
+        res.render('signup/emailverify.pug', { user: req.user });
+        return;
+    }
+
+    const email = decoded.email;
+    User.update(
+        {
+        isEmailVerified: true
         },
         {
-            where: {
-                email: email
-            }
-        })
+        where: {
+            email: email
+        }
+        }
+    )
         .then(user => {
-            res.render('signup/emailverify.pug', { email: email, user: req.user });
+        res.render('signup/emailverify.pug', { email: email, user: req.user });
         })
         .catch(e => {
-            console.error(e);
-            res.render('signup/emailverify.pug', { user: req.user });
+        console.error(e);
+        res.render('signup/emailverify.pug', { user: req.user });
         });
     } else {
-        res.render('signup/emailverify.pug', { user: req.user });
+    res.render('signup/emailverify.pug', { user: req.user });
     }
-});
-
+    });
 
 module.exports = router;

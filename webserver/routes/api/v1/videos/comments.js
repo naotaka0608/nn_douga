@@ -7,28 +7,27 @@ const Comment = require('../../../../models/comment');
 const VideoStatistic = require('../../../../models/videostatistic');
 
 router.get('/:videoId/comments', apiTokenEnsurer, (req, res, next) => {
-      const decodedApiToken = apiTokenDecoder(req);
-    
-      if (decodedApiToken) {
-        const videoId = req.params.videoId;
-        Comment.findAll({
-          where: {
-            videoId: videoId
-          },
-          order: [['videoPosition', 'ASC']]
+    const decodedApiToken = apiTokenDecoder(req);
+
+    if (decodedApiToken) {
+    const videoId = req.params.videoId;
+    Comment.findAll({
+        where: {
+        videoId: videoId
+        },
+        order: [['videoPosition', 'ASC']]
+    })
+        .then(comments => {
+        res.json(comments);
         })
-          .then(comments => {
-            res.json(comments);
-          })
-          .catch(e => {
-            console.error(e);
-            res.json({ status: 'NG', message: 'Database error.' });
-          });
-      } else {
-        res.json({ status: 'NG', message: 'Api token not correct.' });
-      }
-    });
-    
+        .catch(e => {
+        console.error(e);
+        res.json({ status: 'NG', message: 'Database error.' });
+        });
+    } else {
+    res.json({ status: 'NG', message: 'Api token not correct.' });
+    }
+});
 
 router.post('/:videoId/comments', apiTokenEnsurer, (req, res, next) => {
   const decodedApiToken = apiTokenDecoder(req);

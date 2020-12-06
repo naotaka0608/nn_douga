@@ -81,97 +81,96 @@ router.get(
   }
 );
 
-+router.post(
-      '/:videoId',
-      authenticationEnsurer,
-      csrfProtection,
-      (req, res, next) => {
-        const videoId = req.params.videoId;
-        const title = req.body.title;
-        const description = req.body.description;
-    
-        Video.findOne({
-          where: {
-            videoId: videoId,
-            videoStatus: { [Op.ne]: 'Deleted' }
-          }
-        }).then(video => {
-          if (video && (req.user.isAdmin || video.userId === req.user.userId)) {
-            let videoStatus = null;
-            if (req.body.videoStatus === 'Published') {
-              videoStatus = 'Published';
-            } else {
-              videoStatus = 'Encoded';
-            }
-    
-            Video.update(
-              {
-                title: title.substring(0, 255),
-                description: description,
-                videoStatus: videoStatus
-              },
-              {
-                where: {
-                  videoId: video.videoId
-                }
-              }
-            ).then(() => {
-              VideoStatistic.findOrCreate({
-                where: { videoId: videoId },
-                defaults: {
-                  videoId: videoId,
-                  playCount: 0,
-                  commentCount: 0,
-                  myListCount: 0
-                }
-              }).spread((videoStatistic, isCreated) => {
-                res.redirect('/my/videos/' + videoId);
-              });
-            });
-          } else {
-            res.render('notfoundvideo', {
-              config: config,
-              user: req.user
-            });
-          }
-        });
-      }
-    );
-    
-    router.post(
-      '/:videoId/delete',
-      authenticationEnsurer,
-      csrfProtection,
-      (req, res, next) => {
-        const videoId = req.params.videoId;
-        Video.findOne({
-          where: {
-            videoId: videoId,
-            videoStatus: { [Op.ne]: 'Deleted' }
-          }
-        }).then(video => {
-          if (video && (req.user.isAdmin || video.userId === req.user.userId)) {
-            Video.update(
-              {
-                videoStatus: 'Deleted'
-              },
-              {
-                where: {
-                  videoId: video.videoId
-                }
-              }
-            ).then(() => {
-              res.redirect('/my/videos/');
-            });
-          } else {
-            res.render('notfoundvideo', {
-              config: config,
-              user: req.user
-            });
-          }
-        });
-      }
-    );
+router.post(
+    '/:videoId',
+    authenticationEnsurer,
+    csrfProtection,
+    (req, res, next) => {
+    const videoId = req.params.videoId;
+    const title = req.body.title;
+    const description = req.body.description;
 
+    Video.findOne({
+        where: {
+        videoId: videoId,
+        videoStatus: { [Op.ne]: 'Deleted' }
+        }
+    }).then(video => {
+        if (video && (req.user.isAdmin || video.userId === req.user.userId)) {
+        let videoStatus = null;
+        if (req.body.videoStatus === 'Published') {
+            videoStatus = 'Published';
+        } else {
+            videoStatus = 'Encoded';
+        }
+
+        Video.update(
+            {
+            title: title.substring(0, 255),
+            description: description,
+            videoStatus: videoStatus
+            },
+            {
+            where: {
+                videoId: video.videoId
+            }
+            }
+        ).then(() => {
+            VideoStatistic.findOrCreate({
+            where: { videoId: videoId },
+            defaults: {
+                videoId: videoId,
+                playCount: 0,
+                commentCount: 0,
+                myListCount: 0
+            }
+            }).spread((videoStatistic, isCreated) => {
+            res.redirect('/my/videos/' + videoId);
+            });
+        });
+        } else {
+        res.render('notfoundvideo', {
+            config: config,
+            user: req.user
+        });
+        }
+    });
+    }
+);
+    
+router.post(
+    '/:videoId/delete',
+    authenticationEnsurer,
+    csrfProtection,
+    (req, res, next) => {
+    const videoId = req.params.videoId;
+    Video.findOne({
+        where: {
+        videoId: videoId,
+        videoStatus: { [Op.ne]: 'Deleted' }
+        }
+    }).then(video => {
+        if (video && (req.user.isAdmin || video.userId === req.user.userId)) {
+        Video.update(
+            {
+            videoStatus: 'Deleted'
+            },
+            {
+            where: {
+                videoId: video.videoId
+            }
+            }
+        ).then(() => {
+            res.redirect('/my/videos/');
+        });
+        } else {
+        res.render('notfoundvideo', {
+            config: config,
+            user: req.user
+        });
+        }
+    });
+    }
+);
 
 module.exports = router;

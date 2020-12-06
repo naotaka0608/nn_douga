@@ -7,20 +7,20 @@ export default class CommentTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = { comments: [] };
-    this.commentListener = (comments, eventName) => {
-        if (eventName === 'commentpost') {
+        this.commentListener = (comments, eventName) => {
+            if (eventName === 'commentpost') {
             this.setState((prevState, props) => {
                 const newComments = prevState.comments.concat(comments);
                 const sortedNewComments = newComments.sort((a, b) => {
-                    return a.videoPosition - b.videoPosition;
+                return a.videoPosition - b.videoPosition;
                 });
                 return {
-                    comments: sortedNewComments
+                comments: sortedNewComments
                 };
             });
-        }
-    };
-    this.props.commentListenerContainer.listeners.push(this.commentListener);
+            }
+        };
+        this.props.commentListenerContainer.listeners.push(this.commentListener);
   }
 
   componentDidMount() {
@@ -34,16 +34,16 @@ export default class CommentTable extends React.Component {
   updateComments() {
     const selfListener = this.commentListener;
     const listenerContainer = this.props.commentListenerContainer;
-    
     fetch('/v1/videos/' + this.props.videoId + '/comments', {
       headers: { Authorization: 'Bearer ' + this.props.apiToken }
     })
       .then(res => res.json())
       .then(json => {
         listenerContainer.listeners.forEach(listener => {
-            if (listener === selfListener) return;
+                if (listener === selfListener) return;
                 listener(json, 'fetchcomments');
-        });
+            });
+            
         this.setState((prevState, props) => ({
           comments: json
         }));
