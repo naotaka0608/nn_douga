@@ -6,6 +6,8 @@ import java.util.UUID
 import javax.inject._
 
 import akka.actor.ActorRef
+import akka.stream.scaladsl.{FileIO, Source}
+import akka.util.ByteString
 import domain.entity.{Video, VideoStatus}
 import domain.repository.VideoRepository
 import infrastructure.actor.EncodeStartMessage
@@ -14,6 +16,7 @@ import play.api.mvc._
 import play.api.libs.json.Json
 import play.Logger
 import pdi.jwt.{Jwt, JwtAlgorithm}
+import play.api.http.HttpEntity
 
 import scala.util.Success
 import scala.concurrent.Future
@@ -27,8 +30,10 @@ class VideosController @Inject()(cc: ControllerComponents,
                                  configuration: Configuration) extends AbstractController(cc) {
 
   val secret = configuration.get[String]("nnDouga.secret")
+  val allowHeaders = "Accept-Encoding, Connection, Origin, X-Requested-With, Content-Type, Accept, Authorization, Range, If-Range, Cache-Control"
 
   val originalStoreDirPath = configuration.get[String]("nnDouga.filesystem.original")
+  val mpegdashStoreDirPath = configuration.get[String]("nnDouga.filesystem.mpegdash")
 
   def post() = Action.async { implicit request: Request[AnyContent] =>
     request.body.asMultipartFormData match {
@@ -70,6 +75,35 @@ class VideosController @Inject()(cc: ControllerComponents,
             }
         }
       case _ => Future.successful(BadRequest("Need form data."))
+    }
+  }
+
+  def get(fileName: String) = Action.async { implicit request: Request[AnyContent] =>
+    val fileNameRegex = """([a-z0-9\-\_]+)(\.)(mpd|mp4)""".r
+    val (isValid, isMpd) = fileName match {
+      case fileNameRegex(name, dot, ext) => (true, ext == "mpd")
+      case _ => (false, false)
+    }
+
+    if (!isValid) {
+      Future.successful(BadRequest("fileName is not correct."))
+    } else if (isMpd) { // mpd is no need authentication
+      val filePath = FileSystems.getDefault.getPath(mpegdashStoreDirPath, fileName)
+      if (Files.exists(filePath)) {
+        val source: Source[ByteString, _] = FileIO.fromPath(filePath)
+        Future.successful(Result(
+          header = ResponseHeader(200, Map(
+            "Access-Control-Allow-Origin" -> "*",
+            "Access-Control-Allow-Headers" -> allowHeaders
+          )),
+          body = HttpEntity.Streamed(source, None, Some("application/dash+xml"))
+        ))
+      } else {
+        Future.successful(NotFound(s"MPD file Not found. ${fileName}"))
+      }
+
+    } else {
+      Future.successful(NotFound(s"File Not found. ${fileName}"))
     }
   }
 
