@@ -48,7 +48,12 @@ export default class MyVideoTable extends React.Component {
         myVideo.videoStatus === 'Encoded'
       ) {
         operationLink = (
-          <a href={'/my/videos/' + myVideo.videoId}>編集及び公開</a>
+            <a
+            className="btn btn-primary btn-sm"
+            href={'/my/videos/' + myVideo.videoId}
+            >
+            編集及び公開
+            </a>
         );
       }
 
@@ -67,7 +72,7 @@ export default class MyVideoTable extends React.Component {
     });
 
     return (
-      <table>
+        <table className="table">
         <tbody>
           <tr>
             <th>ID</th>

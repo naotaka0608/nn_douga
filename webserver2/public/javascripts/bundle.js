@@ -90906,7 +90906,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function render() {
       var postUrl = this.props.mediaserverUrlRoot + 'v1/videos';
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("form", {
-        className: "dropzone",
+        className: "dropzone jumbotron text-center",
         action: postUrl,
         method: "post",
         id: "videoUploadDropzone"
@@ -94542,6 +94542,7 @@ var MyVideoTable = /*#__PURE__*/function (_React$Component) {
 
         if (myVideo.videoStatus === 'Published' || myVideo.videoStatus === 'Encoded') {
           operationLink = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
+            className: "btn btn-primary btn-sm",
             href: '/my/videos/' + myVideo.videoId
           }, "\u7DE8\u96C6\u53CA\u3073\u516C\u958B");
         }
@@ -94552,7 +94553,9 @@ var MyVideoTable = /*#__PURE__*/function (_React$Component) {
           href: '/watch/' + myVideo.videoId
         }, myVideo.videoId)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, myVideo.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, myVideo.videoStatus), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, formattedCreatedAt), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, myVideo.userId), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, operationLink));
       });
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("table", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "ID"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "\u30BF\u30A4\u30C8\u30EB"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "\u30B9\u30C6\u30FC\u30BF\u30B9"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "\u6295\u7A3F\u65E5\u6642"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "\u6295\u7A3F\u8005ID"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "\u64CD\u4F5C")), myVideos));
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("table", {
+        className: "table"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "ID"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "\u30BF\u30A4\u30C8\u30EB"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "\u30B9\u30C6\u30FC\u30BF\u30B9"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "\u6295\u7A3F\u65E5\u6642"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "\u6295\u7A3F\u8005ID"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "\u64CD\u4F5C")), myVideos));
     }
   }]);
 
